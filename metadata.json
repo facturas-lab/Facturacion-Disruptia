@@ -1,0 +1,5 @@
+{
+  "name": "Remix: Extractor de Certificados Bancarios",
+  "description": "Aplicación para extraer automáticamente datos de certificados bancarios (PDF/Imágenes) usando IA, optimizada para procesos administrativos.",
+  "requestFramePermissions": []
+}

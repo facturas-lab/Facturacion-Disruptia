@@ -1,0 +1,28 @@
+{
+  "entities": {
+    "draft": {
+      "title": "User Draft",
+      "description": "Form drafted information for a user",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The user UID" },
+        "userEmail": { "type": "string", "description": "The user email" },
+        "nombreRazonSocial": { "type": "string" },
+        "tipoDocumento": { "type": "string" },
+        "numeroDocumento": { "type": "string" },
+        "servicios": { "type": "array" },
+        "informacionGeneral": { "type": "string" },
+        "bankData": { "type": "object" },
+        "filesMetadata": { "type": "object" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "userEmail"]
+    }
+  },
+  "firestore": {
+    "drafts/{userId}": {
+      "schema": "draft",
+      "description": "User form draft"
+    }
+  }
+}

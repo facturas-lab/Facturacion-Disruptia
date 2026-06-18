@@ -1,0 +1,47 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isAdmin() {
+      return isEmailVerified() && 
+        (request.auth.token.email.lower() == 'administrativo@disruptia.co' ||
+         request.auth.token.email.lower() == 'juansebastian@disruptia.co' ||
+         request.auth.token.email.lower() == 'lizlopez200295@gmail.com');
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidDraft(data) {
+      return data.keys().hasAll(['userId', 'userEmail']) &&
+             data.userId is string &&
+             data.userEmail is string;
+    }
+
+    match /drafts/{userId} {
+      // Users can read/list their own, Admins can read all drafts
+      allow read, list: if isOwner(userId) || isAdmin();
+
+      // Users can create/update their own drafts
+      allow create, update: if isOwner(userId) && isValidDraft(request.resource.data);
+      
+      // Users can delete their own drafts
+      allow delete: if isOwner(userId);
+    }
+  }
+}
